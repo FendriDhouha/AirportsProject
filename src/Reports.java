@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,16 +35,19 @@ public class Reports {
 	    //runways Types
 	    List<Country> countriesList = Finder.search_countries();
 	    for( Country c : countriesList){
+	    	HashSet<String> surfaces = new HashSet<String>();
 	    	List<Airport> airportsList = Finder.airportsFound(c);
 	    	for(Airport a : airportsList){
 	    		Set<String> runwaysTypes = Finder.runwaysTypes(a);
 	    		if(runwaysTypes.size()>0){
-	    			System.out.print("\nType of runways on the country :"+c.getName()+" are :");
 		    		for(String type : runwaysTypes){
-		    			System.out.print(type +" ,");
+		    			if(!type.equals(""))
+		    				surfaces.add(type);
 		    		}
 	    		}		    		
 	    	}
+	    	if(surfaces.size() > 0)
+	    		System.out.println(c.getName() + ": " + surfaces.toString());
 	    }
 	}
 
