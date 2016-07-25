@@ -21,12 +21,24 @@ public class Query {
 			}else{
 				Country country = new Country(searchResults);			
 				airports = Finder.airportsFound(country);
+				if(airports.size()>0){
+					//System.out.println("Number of Airports found on the Country "+ country.getName() + " is: "+airportList.size());
+					System.out.println("\nAirports found on the Country "+ country.getName() + " are: ");
+					for(int i=0;i<airports.size();i++){
+						System.out.print( airports.get(i).getName()+" , ");	
+					}
+				}else{
+				System.out.print("There are no Airports on the Country "+ country.getName());
+				}
 			}		
 			
 		}else if(searchTerms.length() > 2){
 			String name = searchTerms.toUpperCase();
 			String searchResults = Finder.search("countries.csv", 2, name);
-			if(searchResults == null) {
+			if(searchResults.equals("")){
+				searchResults = Finder.searchPartial("countries.csv", 2, name);
+			}						
+			if(searchResults.equals("")) {
 				System.out.println("Country name not found.");
 			}else{
 				Country country = new Country(searchResults);			

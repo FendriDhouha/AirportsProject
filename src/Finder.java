@@ -41,6 +41,38 @@ public class Finder {
 		return output;
 	}
 	
+	public static String searchPartial(String file, int columnIndex, String value){
+		String output = null;
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(new File(
+					System.getProperty("user.dir") + "/resources/" + file)));
+			
+			String ligne;
+			boolean found = false;
+			while ((ligne=in.readLine())!=null && !found){
+				String [] columns = ligne.split(",");
+				if(columns[columnIndex].toUpperCase().startsWith("\"" + value + "\"")){
+					found = true;
+					output = ligne;
+					break;
+				}
+			}
+			
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		 
+		
+		return output;
+	}
+	/**
+	 * 
+	 * @param file
+	 * @param columnIndex
+	 * @param value
+	 * @return
+	 */
+	
 	public static List<String> search_all(String file, int columnIndex, String value){
 		List<String> output = new ArrayList<String>();
 		//String[] output2 = {};
@@ -63,7 +95,10 @@ public class Finder {
 		}
 		return output;
 	}
-	
+	/**
+	 * 
+	 * @return the list of countries found on the file countries.csv
+	 */
 	public static List<Country> search_countries(){
 		List<Country> output = new ArrayList<Country>();
 		try {
@@ -81,7 +116,11 @@ public class Finder {
 		}
 		return output;
 	}
-	
+	/**
+	 * 
+	 * @param country
+	 * @return airports found by country
+	 */
 	public static List<Airport> airportsFound(Country country){
 		
 		List<String> airports_strings = Finder.search_all("airports.csv", 8, country.getCode());
@@ -91,7 +130,11 @@ public class Finder {
 		}
 		return airportList;
 	}
-
+	/**
+	 * 
+	 * @param airport
+	 * @return runways found by airport
+	 */
 	public static List<Runway> runwaysFound(Airport airport){
 	
 		List<String> runways_strings = Finder.search_all("runways.csv", 2, airport.getIdent());
@@ -104,7 +147,7 @@ public class Finder {
 		if(runwaysList.size()>0){
 			System.out.print("\n");
 			System.out.println("Number of Runways found on the Airport "+ airport.getName() + " is: "+runwaysList.size());
-			System.out.println("Runways found on the Airport "+ airport.getName() + " are: ");
+			System.out.print("Runways found on the Airport "+ airport.getName() + " are: ");
 			for(int i=0;i<runwaysList.size();i++){
 				System.out.print( runwaysList.get(i).getId()+" , ");
 			}
@@ -114,6 +157,11 @@ public class Finder {
 		return runwaysList;
 	}
 	
+	/**
+	 * 
+	 * @param airport
+	 * @return types of runways on each airport
+	 */
 	public static Set<String> runwaysTypes(Airport airport){
 		
 		//List<Runway> runwaytList = airport.getRunways();
@@ -131,8 +179,11 @@ public class Finder {
 			}
 		}
 		return runwaysTypes_set;
-		}
-	
+	}
+	/**
+	 * 
+	 * @return a HashMap of country_code and number of airports
+	 */
 	public static HashMap<String, Integer> reports_process() {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		

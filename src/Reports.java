@@ -42,8 +42,7 @@ public class Reports {
 		    		for(String type : runwaysTypes){
 		    			System.out.print(type +" ,");
 		    		}
-	    		}
-		    		
+	    		}		    		
 	    	}
 	    }
 	}
