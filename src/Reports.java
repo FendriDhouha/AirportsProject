@@ -32,23 +32,33 @@ public class Reports {
 	    // list of 10 countries with Highest nb of runways
 	    listCountriesLow(sorted_countries);
 	    
+	    System.out.println("\n\n###################################\n\n");
+	    
 	    //runways Types
+	    HashMap<String, HashSet<String>> airportsRunways = Finder.associateAirportsToRunways();
+	    HashMap<String, HashSet<String>> countriesRunways = Finder.associateCountriesToRunways(airportsRunways);
 	    List<Country> countriesList = Finder.search_countries();
-	    for( Country c : countriesList){
-	    	HashSet<String> surfaces = new HashSet<String>();
-	    	List<Airport> airportsList = Finder.airportsFound(c);
-	    	for(Airport a : airportsList){
-	    		Set<String> runwaysTypes = Finder.runwaysTypes(a);
-	    		if(runwaysTypes.size()>0){
-		    		for(String type : runwaysTypes){
-		    			if(!type.equals(""))
-		    				surfaces.add(type);
-		    		}
-	    		}		    		
+	    System.out.println("Types of Runways per country:");
+	    for(Country c : countriesList){
+	    	if(countriesRunways.containsKey(c.getCode())) {
+	    		System.out.println("* " + c.getName() + "(" + c.getCode() + "): " + countriesRunways.get(c.getCode()).toString());
 	    	}
-	    	if(surfaces.size() > 0)
-	    		System.out.println(c.getName() + ": " + surfaces.toString());
 	    }
+	    System.out.println("\n\n###################################\n\n");
+	    
+	    
+	    
+	    HashMap<String, Integer> identifications = Finder.getMostCommonIdentification();
+	    List<Map.Entry<String,Integer>> sortedIdentifications = new ArrayList<Map.Entry<String,Integer>>(identifications.entrySet());
+	    Collections.sort(
+	    	sortedIdentifications,
+	    	new Comparator<Map.Entry<String,Integer>>() {
+	    		public int compare(Map.Entry<String,Integer> a, Map.Entry<String,Integer> b) {
+	    			return Integer.compare(b.getValue(), a.getValue());
+	    		}
+	    	}
+	    );
+	    listCommonRunways(sortedIdentifications);
 	}
 
 	public void listCountriesHigh(List<Map.Entry<String,Integer>> sorted_countries){
@@ -65,7 +75,16 @@ public class Reports {
 		System.out.println("10 countries with LOWEST number of airports:");
 	    for (int i = 0; i < countries_low.size(); i++) {
 	    	String country_name = Finder.search("countries.csv", 1, countries_low.get(i).getKey()).split(",")[2].replace("\"", "");
-			System.out.println((i+1) + ") " + country_name + " (" + countries_low.get(i).getKey() + "): " + countries_low.get(i).getValue());
+//			System.out.println((sorted_countries.size() - 9 + i) + ") " + country_name + " (" + countries_low.get(i).getKey() + "): " + countries_low.get(i).getValue());
+	    	System.out.println((i+1) + ") " + country_name + " (" + countries_low.get(i).getKey() + "): " + countries_low.get(i).getValue());
+		}
+	}
+	
+	public void listCommonRunways(List<Map.Entry<String,Integer>> sortedIdentifications){
+		List<Map.Entry<String,Integer>> firstIdentifications = sortedIdentifications.subList(0, 10);
+		System.out.println("10 most common runways in the world:");
+	    for (int i = 0; i < firstIdentifications.size(); i++) {
+	    	System.out.println((i+1) + ") " + firstIdentifications.get(i).getKey() + ": " + firstIdentifications.get(i).getValue());
 		}
 	}
 	

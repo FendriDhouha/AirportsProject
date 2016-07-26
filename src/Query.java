@@ -22,10 +22,11 @@ public class Query {
 				Country country = new Country(searchResults);			
 				airports = Finder.airportsFound(country);
 				if(airports.size()>0){
-					//System.out.println("Number of Airports found on the Country "+ country.getName() + " is: "+airportList.size());
-					System.out.println("\nAirports found on the Country "+ country.getName() + " are: ");
+					System.out.println("\nAirports found "+ country.getName().toUpperCase() + " are: ");
 					for(int i=0;i<airports.size();i++){
-						System.out.print( airports.get(i).getName()+" , ");	
+						System.out.print("* " + airports.get(i).getName());
+						runways = Finder.runwaysFound(airports.get(i));
+						System.out.println("\n");
 					}
 				}else{
 				System.out.print("There are no Airports on the Country "+ country.getName());
@@ -35,30 +36,24 @@ public class Query {
 		}else if(searchTerms.length() > 2){
 			String name = searchTerms.toUpperCase();
 			String searchResults = Finder.search("countries.csv", 2, name);
-			if(searchResults.equals("")){
+			if(searchResults == null){
 				searchResults = Finder.searchPartial("countries.csv", 2, name);
 			}						
-			if(searchResults.equals("")) {
+			if(searchResults == null) {
 				System.out.println("Country name not found.");
 			}else{
 				Country country = new Country(searchResults);			
 				airports = Finder.airportsFound(country);
 				if(airports.size()>0){
-					//System.out.println("Number of Airports found on the Country "+ country.getName() + " is: "+airportList.size());
-					System.out.println("\nAirports found on the Country "+ country.getName() + " are: ");
+					System.out.println("\nAirports found in " + country.getName().toUpperCase() + " are:\n");
 					for(int i=0;i<airports.size();i++){
-						System.out.print( airports.get(i).getName()+" , ");	
+						System.out.print("* " + airports.get(i).getName());
+						runways = Finder.runwaysFound(airports.get(i));
 					}
 				}else{
 				System.out.print("There are no Airports on the Country "+ country.getName());
 				}
 			}						
-		}
-		//runways search
-		if(airports!=null){ 
-			for(int i=0;i<airports.size();i++){
-				runways = Finder.runwaysFound(airports.get(i));
-			}
 		}			
 		
 	}

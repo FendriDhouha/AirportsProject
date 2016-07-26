@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class Finder {
 			boolean found = false;
 			while ((ligne=in.readLine())!=null && !found){
 				String [] columns = ligne.split(",");
-				if(columns[columnIndex].toUpperCase().startsWith("\"" + value + "\"")){
+				if(columns[columnIndex].toUpperCase().startsWith("\"" + value)){
 					found = true;
 					output = ligne;
 					break;
@@ -148,11 +149,13 @@ public class Finder {
 			System.out.print("\n");
 			System.out.println("Number of Runways found on the Airport "+ airport.getName() + " is: "+runwaysList.size());
 			System.out.print("Runways found on the Airport "+ airport.getName() + " are: ");
+			String toPrint = "";
 			for(int i=0;i<runwaysList.size();i++){
-				System.out.print( runwaysList.get(i).getId()+" , ");
+				toPrint += runwaysList.get(i).getId() + ", ";
 			}
+			System.out.println(toPrint.subSequence(0, toPrint.length()-2));
 		}else{
-			System.out.print("\nThere are no Runways on the Airport "+ airport.getName());
+			System.out.print("\nThere are no Runways on the Airport "+ airport.getName()+"\n");
 		}
 		return runwaysList;
 	}
@@ -180,10 +183,7 @@ public class Finder {
 		}
 		return runwaysTypes_set;
 	}
-	/**
-	 * 
-	 * @return a HashMap of country_code and number of airports
-	 */
+	
 	public static HashMap<String, Integer> reports_process() {
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		
@@ -212,6 +212,132 @@ public class Finder {
 		}
 		
 		return result;
+	}
+
+	public static HashMap<String, Integer> getMostCommonIdentification() {
+		HashMap<String, Integer> output = new HashMap<String, Integer>();
+		
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(new File(
+					System.getProperty("user.dir") + "/resources/runways.csv")));
+			
+			String ligne;
+			boolean first_line = true;
+			while ((ligne=in.readLine())!=null){
+				if(first_line) {
+					first_line = false;
+					continue;
+				}
+				String identification = null;
+				try {
+					identification = ligne.split(",")[8].replace("\"", "");
+					if(identification.equals("")) continue;
+				}catch(Exception e) {
+					continue;
+				}
+				
+//				if(country_code.equals("656"))
+//					country_code = ligne.split(",")[10].replace("\"", "");
+				if(!output.containsKey(identification))
+					output.put(identification, 0);
+				output.put(identification, output.get(identification) + 1);
+			}
+			
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return output;
+	}
+	
+	public static HashMap<String, HashSet<String>> associateAirportsToRunways() {
+		HashMap<String, HashSet<String>> output = new HashMap<String, HashSet<String>>();
+		
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(new File(
+					System.getProperty("user.dir") + "/resources/runways.csv")));
+			
+			String ligne;
+			boolean first_line = true;
+			while ((ligne=in.readLine())!=null){
+				if(first_line) {
+					first_line = false;
+					continue;
+				}
+				
+				String airportId;
+				String runwaySurface;
+				
+				try {
+					String[] lineSplit = ligne.split(",");
+					airportId = lineSplit[2].replace("\"", "");
+					runwaySurface = lineSplit[5].replace("\"", "");
+					if(airportId.equals("") || runwaySurface.equals(""))
+						continue;
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+				
+				if(!output.containsKey(airportId)) {
+					output.put(airportId, new HashSet<String>());
+				}
+				output.get(airportId).add(runwaySurface);
+				
+			}
+			
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return output;
+	}
+
+	public static HashMap<String, HashSet<String>> associateCountriesToRunways(HashMap<String, HashSet<String>> airportsRunways) {
+		HashMap<String, HashSet<String>> output = new HashMap<String, HashSet<String>>();
+		
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(new File(
+					System.getProperty("user.dir") + "/resources/airports.csv")));
+			
+			String ligne;
+			boolean first_line = true;
+			while ((ligne=in.readLine())!=null){
+				if(first_line) {
+					first_line = false;
+					continue;
+				}
+				
+				String airportId, country;
+				
+				try {
+					String[] lineSplit = ligne.split(",");
+					airportId = lineSplit[1].replace("\"", "");
+					if(airportId.equals("") || !airportsRunways.containsKey(airportId))
+						continue;
+					country = lineSplit[8].replace("\"", "");
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+				
+				if(!output.containsKey(country)) {
+					output.put(country, new HashSet<String>());
+				}
+				output.get(country).addAll(airportsRunways.get(airportId));
+				
+			}
+			
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return output;
 	}
 
 }
