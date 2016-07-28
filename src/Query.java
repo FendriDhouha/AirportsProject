@@ -16,7 +16,7 @@ public class Query {
 		if(searchTerms.length() == 2){
 			String code = searchTerms.toUpperCase();
 			String searchResults = Finder.search("countries.csv", 1, code);
-			if(searchResults == null) {
+			if(searchResults == "") {
 				System.out.println("Country code not found.");
 			}else{
 				Country country = new Country(searchResults);			

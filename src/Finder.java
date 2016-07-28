@@ -23,13 +23,13 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/" + file)));
 			
-			String ligne;
+			String line;
 			boolean found = false;
-			while ((ligne=in.readLine())!=null && !found){
-				String [] columns = ligne.split(",");
+			while ((line=in.readLine())!=null && !found){
+				String [] columns = line.split(",");
 				if(columns[columnIndex].toUpperCase().equals("\"" + value + "\"")){
 					found = true;
-					output = ligne;
+					output = line;
 					break;
 				}
 			}
@@ -48,13 +48,13 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/" + file)));
 			
-			String ligne;
+			String line;
 			boolean found = false;
-			while ((ligne=in.readLine())!=null && !found){
-				String [] columns = ligne.split(",");
+			while ((line=in.readLine())!=null && !found){
+				String [] columns = line.split(",");
 				if(columns[columnIndex].toUpperCase().startsWith("\"" + value)){
 					found = true;
-					output = ligne;
+					output = line;
 					break;
 				}
 			}
@@ -81,11 +81,11 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/" + file)));
 			
-			String ligne;
-			while ((ligne=in.readLine())!=null){
-				String [] columns = ligne.split(",");
+			String line;
+			while ((line=in.readLine())!=null){
+				String [] columns = line.split(",");
 				if(columns[columnIndex].equals("\"" + value + "\"")){
-					output.add(ligne);
+					output.add(line);
 					//break;
 				}
 			}
@@ -106,9 +106,9 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/countries.csv")));
 			
-			String ligne;
-			while ((ligne=in.readLine())!=null){
-				output.add(new Country(ligne));
+			String line;
+			while ((line=in.readLine())!=null){
+				output.add(new Country(line));
 			}
 			
 			in.close();
@@ -191,16 +191,16 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/airports.csv")));
 			
-			String ligne;
+			String line;
 			boolean first_line = true;
-			while ((ligne=in.readLine())!=null){
+			while ((line=in.readLine())!=null){
 				if(first_line) {
 					first_line = false;
 					continue;
 				}
-				String country_code = ligne.split(",")[8].replace("\"", "");
+				String country_code = line.split(",")[8].replace("\"", "");
 				if(country_code.equals("656"))
-					country_code = ligne.split(",")[10].replace("\"", "");
+					country_code = line.split(",")[10].replace("\"", "");
 				if(!result.containsKey(country_code))
 					result.put(country_code, 0);
 				result.put(country_code, result.get(country_code) + 1);
@@ -221,23 +221,23 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/runways.csv")));
 			
-			String ligne;
+			String line;
 			boolean first_line = true;
-			while ((ligne=in.readLine())!=null){
+			while ((line=in.readLine())!=null){
 				if(first_line) {
 					first_line = false;
 					continue;
 				}
 				String identification = null;
 				try {
-					identification = ligne.split(",")[8].replace("\"", "");
+					identification = line.split(",")[8].replace("\"", "");
 					if(identification.equals("")) continue;
 				}catch(Exception e) {
 					continue;
 				}
 				
 //				if(country_code.equals("656"))
-//					country_code = ligne.split(",")[10].replace("\"", "");
+//					country_code = line.split(",")[10].replace("\"", "");
 				if(!output.containsKey(identification))
 					output.put(identification, 0);
 				output.put(identification, output.get(identification) + 1);
@@ -258,9 +258,9 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/runways.csv")));
 			
-			String ligne;
+			String line;
 			boolean first_line = true;
-			while ((ligne=in.readLine())!=null){
+			while ((line=in.readLine())!=null){
 				if(first_line) {
 					first_line = false;
 					continue;
@@ -270,7 +270,7 @@ public class Finder {
 				String runwaySurface;
 				
 				try {
-					String[] lineSplit = ligne.split(",");
+					String[] lineSplit = line.split(",");
 					airportId = lineSplit[2].replace("\"", "");
 					runwaySurface = lineSplit[5].replace("\"", "");
 					if(airportId.equals("") || runwaySurface.equals(""))
@@ -303,9 +303,9 @@ public class Finder {
 			BufferedReader in = new BufferedReader(new FileReader(new File(
 					System.getProperty("user.dir") + "/resources/airports.csv")));
 			
-			String ligne;
+			String line;
 			boolean first_line = true;
-			while ((ligne=in.readLine())!=null){
+			while ((line=in.readLine())!=null){
 				if(first_line) {
 					first_line = false;
 					continue;
@@ -314,7 +314,7 @@ public class Finder {
 				String airportId, country;
 				
 				try {
-					String[] lineSplit = ligne.split(",");
+					String[] lineSplit = line.split(",");
 					airportId = lineSplit[1].replace("\"", "");
 					if(airportId.equals("") || !airportsRunways.containsKey(airportId))
 						continue;
